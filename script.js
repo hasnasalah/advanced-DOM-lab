@@ -4,9 +4,11 @@ const productQuantityInput = document.getElementById('product-quantity');
 const addProductButton = document.getElementById('add-product');
 const cart = document.getElementById('cart');
 const totalPriceSpan = document.getElementById('total-price');
+const nameRequired=document.getElementById('nameRequired');
+const priceRequired=document.getElementById('priceRequired');
+const qtyRequired=document.getElementById('qtyRequired');
 
 let totalPrice = 0;
-
 function updateTotalPrice(amount) {
   totalPrice += amount;
   totalPriceSpan.textContent = totalPrice.toFixed(2);
@@ -15,22 +17,31 @@ function updateTotalPrice(amount) {
 function calculateThePrice(price, quantity) {
   return price * quantity;
 }
-
-addProductButton.addEventListener('click', function() {
-    if (!productNameInput.value) {
-    alert("Product name cannot be empty!");
-    return;
+function validate(){
+  let validation=true;
+      if (!productNameInput.value) {
+    nameRequired.style.display="block";
+    validation=false;
   }
 
   if (!(parseFloat(productPriceInput.value)) || parseFloat(productPriceInput.value) <= 0) {
-    alert("Please enter a valid price greater than 0!");
-    return;
+   priceRequired.style.display="block";
+   validation=false;
   }
 
-  if (!(parseFloat(productQuantityInput.value)) || parseFloat(productQuantityInput.value) <= 0) {
-    alert("Please enter a valid quantity greater than 0!");
-    return;
+ if (!(parseFloat(productQuantityInput.value)) || parseFloat(productQuantityInput.value) <= 0) {
+            qtyRequired.style.display="block";
+            validation=false;
   }
+  return validation;
+}
+
+addProductButton.addEventListener('click', function() {
+ const validation= validate();
+if(validation===false)
+  return;
+
+
   const fragment = document.createDocumentFragment();
 
   const newProduct = document.createElement('li');
@@ -63,19 +74,19 @@ addProductButton.addEventListener('click', function() {
   const removeButton = document.createElement('button');
   removeButton.textContent = "Remove";
   removeButton.className = "removeBtn";
-  removeButton.style.marginLeft = "10px";
+  removeButton.style.marginLeft = "8px";
 
 
   const updateButton = document.createElement('button');
   updateButton.textContent = "Update";
   updateButton.className = "update-btn";
-  updateButton.style.marginLeft = "10px";
+  updateButton.style.marginLeft = "8px";
 
 
   updateTotalPrice(itemTotal);
  
   [productName, productQuantity, productPrice, totalProductPrice].forEach(span => {
-    span.style.margin = "10px";
+    span.style.margin = "8px";
   });
 
   newProduct.appendChild(productName);
@@ -103,37 +114,28 @@ cart.addEventListener('click', function(event) {
 });
 
 function removeItem(event) {
-  const item = event.target.closest('li');
-  const priceSpan = item.querySelector('.TotalpPrice');
+  const items = event.target.closest('li');
+  const priceSpan = items.querySelector('.TotalpPrice');
   const price = parseFloat(priceSpan.textContent.replace(" $", ""));
     updateTotalPrice(-price);
-  
-
-  item.remove();
+  items.remove();
 }
 function updateItem(event) {
   const item = event.target.closest('li');
-
   const qty = item.querySelector('.pQty');
   const price = item.querySelector('.pPrice');
   const total = item.querySelector('.TotalpPrice');
   const oldTotal = parseFloat(total.textContent.replace(" $", ""));
   const unitPrice = parseFloat(price.textContent.replace(" $", ""));
-
-
   const newQty = parseFloat(prompt("Enter new quantity:", qty.textContent));
+
   if (!(newQty) || newQty <= 0) {
     alert("Invalid quantity!");
-    return;
-  }
-
+    return;}
 
   const newTotal = calculateThePrice(unitPrice, newQty);
-
-
   qty.textContent = newQty;
   total.textContent = newTotal.toFixed(2) + " $";
-
 
   updateTotalPrice(newTotal - oldTotal);
 }

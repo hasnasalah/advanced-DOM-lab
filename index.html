@@ -9,9 +9,18 @@
 <body>
   <h1>Dynamic Shopping Cart</h1>
   <div id="product-container">
-    <input type="text" id="product-name" placeholder="Product Name">
+    <div>
+    <input type="text" id="product-name" placeholder="Product Name" required>
+    <div  id="nameRequired" style="display:none;"> Please Enter A valid product name</div>
+    </div>
+    <div>
     <input type="number" id="product-quantity" placeholder="Product Quantity">
+    <div  id="qtyRequired" style="display:none;"> Please Enter A valid  product qty</div>
+    </div>
+    <div>
     <input type="number" id="product-price" placeholder="Product Price">
+    <div  id="priceRequired" style="display:none;"> Please Enter A valid Price</div>
+    </div>
     <button id="add-product">Add Product</button>
   </div>
   <ul id="cart"></ul>
